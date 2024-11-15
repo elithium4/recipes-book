@@ -1,24 +1,46 @@
 'use strict';
 
-var path = require('path');
-var http = require('http');
+const path = require('path');
+const http = require('http');
+const express = require('express');
 
-var oas3Tools = require('oas3-tools');
-var serverPort = 8080;
+const oas3Tools = require('oas3-tools');
+const serverPort = 8080;
+const app = express();
+
+const client = require('prom-client');
+
+// Create a Registry to register the metrics
+const register = new client.Registry();
+
+client.collectDefaultMetrics({
+    app: 'node-application-monitoring-app',
+    prefix: 'node_',
+    timeout: 10000,
+    gcDurationBuckets: [0.001, 0.01, 0.1, 1, 2, 5],
+    register
+});
+
+app.get('/metrics', async (req, res) => {
+    res.setHeader('Content-Type', register.contentType);
+    res.send(await register.metrics());
+});
+
 
 // swaggerRouter configuration
-var options = {
+const options = {
     routing: {
         controllers: path.join(__dirname, './controllers')
     },
 };
 
-var expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, 'api/openapi.yaml'), options);
-var app = expressAppConfig.getApp();
+const expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, 'api/openapi.yaml'), options);
+const swaggerApp = expressAppConfig.getApp();
+
+app.use(swaggerApp);
 
 // Initialize the Swagger middleware
 http.createServer(app).listen(serverPort, function () {
     console.log('Your server is listening on port %d (http://localhost:%d)', serverPort, serverPort);
     console.log('Swagger-ui is available on http://localhost:%d/docs', serverPort);
 });
-
