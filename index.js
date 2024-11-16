@@ -14,7 +14,7 @@ const client = require('prom-client');
 const register = new client.Registry();
 
 client.collectDefaultMetrics({
-    app: 'node-application-monitoring-app',
+    app: 'recipies-app',
     prefix: 'node_',
     timeout: 10000,
     gcDurationBuckets: [0.001, 0.01, 0.1, 1, 2, 5],
