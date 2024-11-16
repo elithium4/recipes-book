@@ -1,5 +1,5 @@
 FROM node:18
-WORKDIR /recipies-app
+WORKDIR /recipes-app
 COPY package*.json ./
 
 RUN npm install

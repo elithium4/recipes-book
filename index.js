@@ -14,11 +14,29 @@ const client = require('prom-client');
 const register = new client.Registry();
 
 client.collectDefaultMetrics({
-    app: 'recipies-app',
+    app: 'recipes-app',
     prefix: 'node_',
     timeout: 10000,
     gcDurationBuckets: [0.001, 0.01, 0.1, 1, 2, 5],
     register
+});
+
+const totalRequests = new client.Counter({
+    name: 'api_requests_total',
+    help: 'Total number of API requests',
+    labelNames: ['method', 'endpoint', 'status'],
+});
+
+register.registerMetric(totalRequests)
+
+app.use((req, res, next) => {
+    console.log(`Received request for ${req.path} with method ${req.method}`);
+    res.on('finish', () => {
+        if (req.path !== "/metrics") {
+            totalRequests.inc({ method: req.method, endpoint: req.path, status: res.statusCode });
+        }
+    });
+    next();
 });
 
 app.get('/metrics', async (req, res) => {

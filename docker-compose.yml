@@ -36,8 +36,8 @@ services:
       - 3000
     networks:
       - monitoring
-  recipies-app:
-    hostname: recipies-app
+  recipes-app:
+    hostname: recipes-app
     build:
       context: ./
     ports:
