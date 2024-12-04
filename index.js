@@ -4,6 +4,7 @@ const path = require('path');
 const http = require('http');
 const express = require('express');
 const logger = require('./utils/logger');
+const imitateServerFailure = require('./utils/imitateServerFailure')
 
 const oas3Tools = require('oas3-tools');
 const serverPort = 8080;
@@ -32,6 +33,11 @@ register.registerMetric(totalRequests)
 
 app.use((req, res, next) => {
     logger.info(`Received request for ${req.path} with method ${req.method}`);
+    try {
+        imitateServerFailure();
+    } catch(err) {
+        logger.error(err.message);
+    }
     res.on('finish', () => {
         if (req.path !== "/metrics") {
             totalRequests.inc({ method: req.method, endpoint: req.path, status: res.statusCode });
