@@ -16,9 +16,93 @@
   "editable": true,
   "gnetId": 11159,
   "graphTooltip": 0,
-  "iteration": 1731765463278,
+  "iteration": 1733343686971,
   "links": [],
   "panels": [
+    {
+      "datasource": "Loki",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 16,
+      "options": {
+        "showLabels": false,
+        "showTime": false,
+        "sortOrder": "Descending",
+        "wrapLogMessage": false
+      },
+      "pluginVersion": "7.1.5",
+      "targets": [
+        {
+          "expr": "{job=\"recipes-app\"}",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Все логи",
+      "type": "logs"
+    },
+    {
+      "datasource": "Loki",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 18,
+      "options": {
+        "showLabels": false,
+        "showTime": false,
+        "sortOrder": "Descending",
+        "wrapLogMessage": false
+      },
+      "pluginVersion": "7.1.5",
+      "targets": [
+        {
+          "expr": "{job=\"recipes-app\", level=\"error\"}",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Ошибки",
+      "type": "logs"
+    },
     {
       "aliasColors": {},
       "bars": false,
@@ -51,7 +135,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 0
+        "y": 8
       },
       "hiddenSeries": false,
       "id": 14,
@@ -143,7 +227,7 @@
         "h": 7,
         "w": 10,
         "x": 0,
-        "y": 8
+        "y": 16
       },
       "hiddenSeries": false,
       "id": 6,
@@ -246,7 +330,7 @@
         "h": 7,
         "w": 9,
         "x": 10,
-        "y": 8
+        "y": 16
       },
       "hiddenSeries": false,
       "id": 8,
@@ -352,7 +436,7 @@
         "h": 3,
         "w": 5,
         "x": 19,
-        "y": 8
+        "y": 16
       },
       "id": 2,
       "interval": "",
@@ -443,7 +527,7 @@
         "h": 4,
         "w": 5,
         "x": 19,
-        "y": 11
+        "y": 19
       },
       "id": 4,
       "interval": null,
@@ -522,7 +606,7 @@
         "h": 7,
         "w": 16,
         "x": 0,
-        "y": 15
+        "y": 23
       },
       "hiddenSeries": false,
       "id": 7,
@@ -640,7 +724,7 @@
         "h": 7,
         "w": 8,
         "x": 16,
-        "y": 15
+        "y": 23
       },
       "hiddenSeries": false,
       "id": 9,
@@ -743,7 +827,7 @@
         "h": 8,
         "w": 8,
         "x": 0,
-        "y": 22
+        "y": 30
       },
       "hiddenSeries": false,
       "id": 10,
@@ -840,7 +924,7 @@
         "h": 8,
         "w": 8,
         "x": 8,
-        "y": 22
+        "y": 30
       },
       "hiddenSeries": false,
       "id": 11,
@@ -937,7 +1021,7 @@
         "h": 8,
         "w": 8,
         "x": 16,
-        "y": 22
+        "y": 30
       },
       "hiddenSeries": false,
       "id": 12,

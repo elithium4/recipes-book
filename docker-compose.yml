@@ -36,6 +36,28 @@ services:
       - 3000
     networks:
       - monitoring
+  
+  loki: 
+    image: grafana/loki:3.0.0
+    ports: 
+      - 3100:3100
+    networks:
+      - monitoring
+    volumes:
+      - ./loki/loki-config.yaml:/etc/loki/local-config.yaml
+    command: -config.file=/etc/loki/local-config.yaml
+    expose:
+      - 3100
+
+  promtail:
+    image: grafana/promtail:latest
+    networks:
+      - monitoring
+    volumes:
+      - /var/log/recipes-app:/var/log/recipes-app
+      - ./promtail/promtail-config.yaml:/etc/promtail/promtail-config.yaml
+    command: -config.file=/etc/promtail/promtail-config.yaml
+  
   recipes-app:
     hostname: recipes-app
     build:
