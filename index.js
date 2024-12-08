@@ -1,10 +1,11 @@
 'use strict';
-
+require("./utils/tracing");
 const path = require('path');
 const http = require('http');
 const express = require('express');
 const logger = require('./utils/logger');
 const imitateServerFailure = require('./utils/imitateServerFailure')
+const { trace } = require('@opentelemetry/api');
 
 const oas3Tools = require('oas3-tools');
 const serverPort = 8080;
@@ -32,9 +33,13 @@ const totalRequests = new client.Counter({
 register.registerMetric(totalRequests)
 
 app.use((req, res, next) => {
+
+    const tracer = trace.getTracer('recipes-book');
+    const span = tracer.startSpan('http.request.get');
     logger.info(`Received request for ${req.path} with method ${req.method}`);
     try {
         imitateServerFailure();
+        span.setAttributes({'http.status_code': 200})
     } catch(err) {
         logger.error(err.message);
     }
@@ -43,6 +48,7 @@ app.use((req, res, next) => {
             totalRequests.inc({ method: req.method, endpoint: req.path, status: res.statusCode });
         }
     });
+    span.end()
     next();
 });
 

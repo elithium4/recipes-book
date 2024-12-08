@@ -18,9 +18,10 @@ services:
     networks:
       - monitoring
   grafana:
-    image: grafana/grafana:7.1.5
+    image: grafana/grafana:11.4.0
     depends_on:
       - prometeus
+      - otel-collector
     container_name: grafana
     volumes:
       - ./grafana/provisioning:/etc/grafana/provisioning
@@ -37,6 +38,22 @@ services:
     networks:
       - monitoring
   
+  tempo:
+    image: grafana/tempo:2.6.1
+    container_name: tempo
+    ports:
+      - 3200:3200
+    expose:
+      - 3200
+    networks:
+      - monitoring
+    volumes:
+      - tempo_data:/tmp/tempo
+      - ./grafana-tempo/tempo-config.yaml:/etc/tempo-config.yaml
+    command:
+      - -config.file=/etc/tempo-config.yaml
+
+
   loki: 
     image: grafana/loki:3.0.0
     ports: 
@@ -58,6 +75,37 @@ services:
       - ./promtail/promtail-config.yaml:/etc/promtail/promtail-config.yaml
     command: -config.file=/etc/promtail/promtail-config.yaml
   
+  otel-collector:
+    image: otel/opentelemetry-collector:latest
+    depends_on:
+      - tempo
+    volumes:
+      - ./open-telemetry/otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    command:
+      - --config=/etc/otel-collector-config.yaml
+    ports:
+      - 4317:4317
+      - 4318:4318
+    expose:
+      - 4317
+      - 4318
+    networks:
+      - monitoring
+
+  # jaeger:
+  #   image: jaegertracing/all-in-one:latest
+  #   ports:
+  #     - 6831:6831/udp
+  #     - 6832:6832/udp
+  #     - 5778:5778
+  #     - 16686:16686
+  #     - 14250:14250
+  #     - 14268:14268
+  #     - 14269:14269
+  #     - 9411:9411
+  #   networks:
+  #     - monitoring
+
   recipes-app:
     hostname: recipes-app
     build:
@@ -71,3 +119,4 @@ services:
 volumes:
     prometheus_data: {}
     grafana_data: {}
+    tempo_data: {}
