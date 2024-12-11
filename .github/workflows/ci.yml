@@ -23,6 +23,6 @@ jobs:
       - name: npm install & lint
         run: |
             npm install
-            npm lint
+            npm run lint
         env:
           CI: true
