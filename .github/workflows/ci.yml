@@ -10,14 +10,14 @@ on:
 
 jobs:
   build:
-    name: Build & Checkout application
+    runs-on: ubuntu-latest
     steps:
       - name: Setup Node.js 20
         uses: actions/setup-node@v1
         with:
           node-version: 20.x
     
-    name: npm install & lint
-    run:
-      - npm install
-      - npm lint
+      - name: npm install & lint
+        run: |
+            npm install
+            npm lint
